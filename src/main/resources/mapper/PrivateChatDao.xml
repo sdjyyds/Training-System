@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.PrivateChatDao">
+  <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.PrivateChat">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sender_id" jdbcType="INTEGER" property="senderId" />
+    <result column="receiver_id" jdbcType="INTEGER" property="receiverId" />
+    <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.system.jdbc.entity.PrivateChat">
+    <result column="message" jdbcType="LONGVARCHAR" property="message" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sender_id, receiver_id, `timestamp`
+  </sql>
+  <sql id="Blob_Column_List">
+    message
+  </sql>
+  <select id = "showPrivateChatMessage" parameterType="java.lang.Integer" resultType="com.example.system.jdbc.entity.Message">
+      SELECT u.`username` AS senderName, p.`message` AS content, p.`timestamp`
+      FROM private_chats p
+               LEFT JOIN users u
+                         ON p.`receiver_id` = u.`id`
+      WHERE p.`receiver_id` = #{userId} AND p.`sender_id` = #{myUserId}
+         OR p.`receiver_id` = #{myUserId} AND p.`sender_id` = #{userId}
+      ORDER BY p.`timestamp`;
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from private_chats
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from private_chats
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.PrivateChat" useGeneratedKeys="true">
+    insert into private_chats (sender_id, receiver_id, `timestamp`, 
+      message)
+    values (#{senderId,jdbcType=INTEGER}, #{receiverId,jdbcType=INTEGER}, #{timestamp,jdbcType=TIMESTAMP}, 
+      #{message,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertPrivateMessage" >
+      insert into private_chats(sender_id, receiver_id, message, timestamp)
+      values (#{senderId}, #{receiverId}, #{content}, now());
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.PrivateChat" useGeneratedKeys="true">
+    insert into private_chats
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="senderId != null">
+        sender_id,
+      </if>
+      <if test="receiverId != null">
+        receiver_id,
+      </if>
+      <if test="timestamp != null">
+        `timestamp`,
+      </if>
+      <if test="message != null">
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="senderId != null">
+        #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null">
+        #{receiverId,jdbcType=INTEGER},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.system.jdbc.entity.PrivateChat">
+    update private_chats
+    <set>
+      <if test="senderId != null">
+        sender_id = #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="receiverId != null">
+        receiver_id = #{receiverId,jdbcType=INTEGER},
+      </if>
+      <if test="timestamp != null">
+        `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        message = #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.system.jdbc.entity.PrivateChat">
+    update private_chats
+    set sender_id = #{senderId,jdbcType=INTEGER},
+      receiver_id = #{receiverId,jdbcType=INTEGER},
+      `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      message = #{message,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.system.jdbc.entity.PrivateChat">
+    update private_chats
+    set sender_id = #{senderId,jdbcType=INTEGER},
+      receiver_id = #{receiverId,jdbcType=INTEGER},
+      `timestamp` = #{timestamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

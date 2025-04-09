@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.ProductDao">
+  <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="short_description" jdbcType="VARCHAR" property="shortDescription" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.system.jdbc.entity.Product">
+    <result column="long_description" jdbcType="LONGVARCHAR" property="longDescription" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, price, short_description, image_url, created_at
+  </sql>
+  <sql id="Blob_Column_List">
+    long_description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from products
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from products
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.Product" useGeneratedKeys="true">
+    insert into products (`name`, price, short_description, 
+      image_url, created_at, long_description
+      )
+    values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{shortDescription,jdbcType=VARCHAR}, 
+      #{imageUrl,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{longDescription,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.Product" useGeneratedKeys="true">
+    insert into products
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="shortDescription != null">
+        short_description,
+      </if>
+      <if test="imageUrl != null">
+        image_url,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+      <if test="longDescription != null">
+        long_description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="shortDescription != null">
+        #{shortDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longDescription != null">
+        #{longDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.system.jdbc.entity.Product">
+    update products
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="shortDescription != null">
+        short_description = #{shortDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="longDescription != null">
+        long_description = #{longDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.system.jdbc.entity.Product">
+    update products
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      short_description = #{shortDescription,jdbcType=VARCHAR},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      long_description = #{longDescription,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.system.jdbc.entity.Product">
+    update products
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      short_description = #{shortDescription,jdbcType=VARCHAR},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

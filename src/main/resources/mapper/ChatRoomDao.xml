@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.ChatRoomDao">
+  <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.ChatRoom">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="chat_image" jdbcType="VARCHAR" property="chatImage" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, `name`, created_at, chat_image
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chat_rooms
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from chat_rooms
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.ChatRoom" useGeneratedKeys="true">
+    insert into chat_rooms (`name`, created_at,chat_image)
+    values (#{name,jdbcType=VARCHAR}, now(),#{chatImage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.ChatRoom" useGeneratedKeys="true">
+    insert into chat_rooms
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="createdAt != null">
+        created_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.system.jdbc.entity.ChatRoom">
+    update chat_rooms
+    <set>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.system.jdbc.entity.ChatRoom">
+    update chat_rooms
+    set `name` = #{name,jdbcType=VARCHAR},
+      created_at = #{createdAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

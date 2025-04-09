@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Info</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="user-info.css">
+</head>
+<body>
+<div class="container">
+    <img id="user-image" src="" class="profile-pic" alt="Profile Picture">
+    <div class="info-item"><label>用户名:</label><input type="text" id="username"></div>
+
+    <div class="info-item">
+        <label>邮箱:</label>
+        <span id="email-hidden"></span>
+        <button onclick="revealEmail()">查看</button>
+    </div>
+
+    <div class="info-item">
+        <label>手机号:</label>
+        <span id="phone-hidden"></span>
+        <button onclick="revealPhone()">查看</button>
+    </div>
+
+    <div class="info-item"><label>地址:</label><input type="text" id="address"></div>
+    <div class="info-item"><label>籍贯:</label><input type="text" id="hometown"></div>
+    <div class="info-item"><label>身份:</label><span id="role"></span></div>
+
+    <div class="info-item">
+        <label>注册时间:</label>
+        <input type="text" id="created_at" readonly class="readonly-input">
+    </div>
+
+    <button onclick="updateUserInfo()">保存修改</button>
+    <div id="forgot-password" onclick="recoverPassword()">忘记密码？点击找回</div>
+</div>
+
+<div id="password-modal" class="modal">
+    <div class="modal-content">
+        <p id="modal-text">请输入密码：</p>
+        <input type="password" id="modal-password">
+        <div class="modal-buttons">
+            <button onclick="submitPassword()">确认</button>
+            <button onclick="closePasswordModal()">取消</button>
+        </div>
+    </div>
+</div>
+<script src="user-info.js"></script>
+</body>
+</html>

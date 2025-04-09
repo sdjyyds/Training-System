@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.GroupMessageDao">
+  <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.GroupMessage">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="sender_id" jdbcType="INTEGER" property="senderId" />
+    <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.example.system.jdbc.entity.GroupMessage">
+    <result column="message" jdbcType="LONGVARCHAR" property="message" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, room_id, sender_id, `timestamp`
+  </sql>
+  <sql id="Blob_Column_List">
+    message
+  </sql>
+  <select id="showGroupChatMessage" parameterType="java.lang.Integer" resultType="com.example.system.jdbc.entity.Message">
+      SELECT u.`username` AS senderName, g.`message` AS content
+      FROM group_messages g
+               LEFT JOIN users u
+                         ON g.`sender_id` = u.`id`
+      WHERE g.`room_id` = #{roomId};
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from group_messages
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from group_messages
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertGroupMessage">
+    insert into group_messages(sender_id,room_id,message,timestamp)
+    values(#{senderId},#{roomId},#{content},now());
+  </insert>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.GroupMessage" useGeneratedKeys="true">
+    insert into group_messages(room_id, sender_id, `timestamp`,
+      message)
+    values (#{roomId,jdbcType=INTEGER}, #{senderId,jdbcType=INTEGER}, #{timestamp,jdbcType=TIMESTAMP}, 
+      #{message,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.GroupMessage" useGeneratedKeys="true">
+    insert into group_messages
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="senderId != null">
+        sender_id,
+      </if>
+      <if test="timestamp != null">
+        `timestamp`,
+      </if>
+      <if test="message != null">
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roomId != null">
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="senderId != null">
+        #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="timestamp != null">
+        #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.system.jdbc.entity.GroupMessage">
+    update group_messages
+    <set>
+      <if test="roomId != null">
+        room_id = #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="senderId != null">
+        sender_id = #{senderId,jdbcType=INTEGER},
+      </if>
+      <if test="timestamp != null">
+        `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        message = #{message,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.example.system.jdbc.entity.GroupMessage">
+    update group_messages
+    set room_id = #{roomId,jdbcType=INTEGER},
+      sender_id = #{senderId,jdbcType=INTEGER},
+      `timestamp` = #{timestamp,jdbcType=TIMESTAMP},
+      message = #{message,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.system.jdbc.entity.GroupMessage">
+    update group_messages
+    set room_id = #{roomId,jdbcType=INTEGER},
+      sender_id = #{senderId,jdbcType=INTEGER},
+      `timestamp` = #{timestamp,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

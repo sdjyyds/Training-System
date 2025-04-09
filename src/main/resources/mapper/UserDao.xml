@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="hometown" jdbcType="VARCHAR" property="hometown"/>
+        <result column="role" jdbcType="CHAR" property="role"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="user_image" jdbcType="VARCHAR" property="userImage"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, username, email, phone, address, hometown, `role`, created_at, user_image
+    </sql>
+    <sql id="Find_Column_List">
+        select u.id as id,u.username as username,u.`role` `role`
+        FROM users u JOIN user_sensitive u2
+        ON u.`id` = u2.`user_id`
+        where
+    </sql>
+    <select id="selectPrivateChatUser" parameterType="java.lang.Integer" resultType="com.example.system.jdbc.entity.ChatIndex">
+        SELECT u.`username` AS chatName, u.`user_image` AS chatImage,u.`id` id,"privateChat" AS `type`
+        FROM users u
+        WHERE u.id IN (SELECT DISTINCT p.`receiver_id`
+                       FROM private_chats p
+                       WHERE p.`sender_id` = #{id}
+                       UNION
+                       SELECT DISTINCT p.`sender_id`
+                       FROM private_chats p
+                       WHERE p.`receiver_id` = #{id});
+    </select>
+    <select id="selectChatRoomsName" parameterType="java.lang.Integer" resultType="com.example.system.jdbc.entity.ChatIndex">
+        SELECT c.`name` as chatName,
+               c.chat_image AS chatImage,
+               c.id as id,
+               "roomChat" AS `type`
+        FROM chat_rooms c
+        WHERE c.id IN (SELECT g.`room_id`
+                       FROM group_messages g
+                                JOIN users u
+                                     ON g.`sender_id` = u.`id`
+                       WHERE u.`id` = #{id});
+    </select>
+    <select id="selectUserNameById" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select username
+        from users
+        where id = #{id};
+    </select>
+    <select id="findByEmailAndPassword" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <include refid="Find_Column_List"/>
+        password_hash = #{password} and email = #{email};
+    </select>
+    <select id="findByPhoneAndPassword" parameterType="java.lang.String" resultMap="BaseResultMap">
+        <include refid="Find_Column_List"/>
+        password_hash = #{password} and phone = #{phone};
+    </select>
+    <select id="selectPrimaryKeyByEmail" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id
+        from users
+        where email = #{email,jdbcType=VARCHAR};
+    </select>
+    <select id="selectPrimaryKeyByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select id
+        from users
+        where phone = #{phone,jdbcType=VARCHAR};
+    </select>
+    <select id="existPhone" parameterType="java.lang.System" resultType="java.lang.Boolean">
+        select count(1)
+        from users
+        where phone = #{phone,jdbcType=VARCHAR};
+    </select>
+    <select id="existEmail" parameterType="java.lang.String" resultType="java.lang.Boolean">
+        select count(1)
+        from users
+        where email = #{email,jdbcType=VARCHAR};
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from users
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from users
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.User"
+            useGeneratedKeys="true">
+        insert into users (username, email, phone,
+                           address, hometown, `role`,
+                           created_at)
+        values (#{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                #{address,jdbcType=VARCHAR}, #{hometown,jdbcType=VARCHAR}, #{role,jdbcType=CHAR},
+                #{createdAt,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.example.system.jdbc.entity.User"
+            useGeneratedKeys="true">
+        insert into users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                username,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="hometown != null">
+                hometown,
+            </if>
+            <if test="role != null">
+                `role`,
+            </if>
+            <if test="createdAt != null">
+                created_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="hometown != null">
+                #{hometown,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=CHAR},
+            </if>
+            <if test="createdAt != null">
+                #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.example.system.jdbc.entity.User">
+        update users
+        <set>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="hometown != null">
+                hometown = #{hometown,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                `role` = #{role,jdbcType=CHAR},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.example.system.jdbc.entity.User">
+        update users
+        set username   = #{username,jdbcType=VARCHAR},
+            email      = #{email,jdbcType=VARCHAR},
+            phone      = #{phone,jdbcType=VARCHAR},
+            address    = #{address,jdbcType=VARCHAR},
+            hometown   = #{hometown,jdbcType=VARCHAR},
+            `role`     = #{role,jdbcType=CHAR},
+            created_at = #{createdAt,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
