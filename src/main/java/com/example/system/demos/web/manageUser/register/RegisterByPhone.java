@@ -47,12 +47,14 @@ public class RegisterByPhone implements RegisterController{
         //简单处理，只负责分配手机号
         user.setPhone(content);
         userDao.insertSelective(user);
-        userSensitive.setUserId(userDao.selectPrimaryKeyByEmail(content));
+        Integer userId = userDao.selectPrimaryKeyByPhone(content);
+        userSensitive.setUserId(userId);
+        System.out.println(userId);
         String passwordHash = MD5Utils.generateWay(password);
         userSensitive.setPasswordHash(passwordHash);
         userSensitiveDao.insertSelective(userSensitive);
-        System.out.println("邮箱为：" + content + "的用户注册成功");
-        System.out.println("该用户的ID为：" + userDao.selectPrimaryKeyByEmail(content));
+        System.out.println("手机号为：" + content + "的用户注册成功");
+        System.out.println("该用户的ID为：" + userId);
         // 返回成功消息
         result.put("success", true);
         result.put("message", "注册成功！");

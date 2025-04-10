@@ -69,7 +69,7 @@ public class LoginControllerImpl implements LoginController{
             System.out.println("session:" + session);
             System.out.println(session.getAttribute("user"));
             System.out.println(session.getMaxInactiveInterval());
-            return "{\"status\": \"success\", \"user\": \"" + session.getAttribute("user") + "\", \"redirect\": \"index/homeIndex.html\"}";
+            return "{\"status\": \"success\", \"user\": \"" + session.getAttribute("user") + "\", \"redirect\": \"../index/homeIndex.html\"}";
         }
 
         // Session 失效，检查 Cookie["login"] 和 Cookie["token"]
@@ -96,7 +96,7 @@ public class LoginControllerImpl implements LoginController{
             System.out.println(session.getAttribute("user"));
             System.out.println("session.getAttribute(\"username\"): " + session.getAttribute("username"));
             System.out.println(session.getAttribute("username"));
-            return "{\"status\": \"success\", \"user\": \"" + login + "\", \"redirect\": \"index/homeIndex.html\"}";
+            return "{\"status\": \"success\", \"user\": \"" + login + "\", \"redirect\": \"../index/homeIndex.html\"}";
         }
 
         return "{\"status\": \"fail\"}";

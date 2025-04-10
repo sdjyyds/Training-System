@@ -2,7 +2,7 @@ let isPhoneRegister = true;
 
 function sendVerification(){
     let code = Math.floor(100000 + Math.random() * 900000); // 生成6位验证码
-    document.getElementById("verification").innerText = code;
+    document.getElementById("verification").innerText = code.toString();
 }
 
 function toggleRegister() {
@@ -60,7 +60,7 @@ function register() {
         if (xhr.readyState === 4) {
             let response = JSON.parse(xhr.responseText);
             if (xhr.status === 200 && response.success) {
-                window.location.href = 'login.html';
+                window.location.href = "../login/login.html";
             } else {
                 document.getElementById('repeatCheck').innerText = response.message || "该手机号/邮箱已被注册！";
             }
