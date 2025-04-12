@@ -24,27 +24,27 @@ public class ShowChatControllerImpl implements ShowChatController {
     @GetMapping("/group")
     @Override
     public List<Message> getGroupMessages(@RequestParam("roomId") int roomId, HttpSession session) {
-        System.out.println("session: dasdsad" + session);
-        System.out.println("session.getAttribute(\"user\"): " + session.getAttribute("user"));
+       // System.out.println("session: dasdsad" + session);
+       // System.out.println("session.getAttribute(\"user\"): " + session.getAttribute("user"));
         Integer myUserId = Integer.parseInt(session.getAttribute("user").toString());
         if (myUserId == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "请先登录");
         }
         // 你可以加一层判断：当前用户是否在这个群
-        System.out.println("roomId = " + roomId);
-        System.out.println("fdgsfkgdgjnfd");
+  //      System.out.println("roomId = " + roomId);
+    //    System.out.println("fdgsfkgdgjnfd");
         return chatService.getGroupMessages(roomId);
     }
     @GetMapping("/private")
     @Override
     public List<Message> getPrivateMessages(@RequestParam("userId") int userId, HttpSession session) {
-        System.out.println("session:   dsdsd" +session);
-        System.out.println("session.getAttribute(\"user\"): " + session.getAttribute("user"));
+      //  System.out.println("session:   dsdsd" +session);
+     //   System.out.println("session.getAttribute(\"user\"): " + session.getAttribute("user"));
         if(session.getAttribute("user") == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "请先登录");
         }
         Integer myUserId = Integer.parseInt(session.getAttribute("user").toString());
-        System.out.println("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
+    //    System.out.println("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
         // 查询的是当前用户与 userId 的聊天记录
         return chatService.getPrivateMessages(userId,myUserId);
     }

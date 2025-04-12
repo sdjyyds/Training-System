@@ -1,18 +1,28 @@
 body {
-    background: #f9f9f9;
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 40px;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../img/user-info-background.jpg'); /* 替换为你的图片路径 */
+    background-size: cover;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
 }
 
-.container {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    width: 500px;
+
+
+.container{
+    position: relative;
+    width: 30%;
+    padding: 20px;
+    border-radius: 10px;
+    background-image: url('../img/user-info-container-background.jpg'); /* 替换为你的图片路径 */
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+   /* transform: scale(1.7);*/
+    transform-origin: center; /* 以中心为放大点 */
 }
 
 .profile-pic {

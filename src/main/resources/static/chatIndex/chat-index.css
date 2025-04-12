@@ -1,18 +1,26 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-image: url('../img/chat-index-background.jpg'); /* 替换为你的图片路径 */
+    background-size: cover;
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
 }
 
 .chat-container {
-    width: 400px;
-    background: white;
+    position: relative;
+    width: 300px;
     padding: 20px;
     border-radius: 10px;
+    background-image: url('../img/chat-index-container-background.jpg'); /* 替换为你的图片路径 */
+    background-size: cover;
+    background-position: center;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /*transform: scale(1.7);  将整体放大 1.2 倍 */
+    transform-origin: center; /* 以中心为放大点 */
 }
 
 .chat-item {

@@ -17,14 +17,33 @@ function loadUserInfo(id) {
     fetch(`../userInfo/getInfo?userId=${userId}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("username").value = data.username;
-            document.getElementById("email-hidden").innerText = maskEmail(data.email);
-            document.getElementById("phone-hidden").innerText = maskPhone(data.phone);
-            document.getElementById("address").value = data.address;
-            document.getElementById("hometown").value = data.hometown;
-            document.getElementById("role").innerText = data.role;
-            document.getElementById("created_at").value = new Date(data.createdAt).toLocaleString();
-            document.getElementById("user-image").src = data.userImage;
+            if (data.username !== null) {
+                document.getElementById("username").value = data.username;
+            }
+            if (data.email !== null) {
+                document.getElementById("email-hidden").innerText = maskEmail(data.email);
+            }
+            if (data.phone !== null) {
+                document.getElementById("phone-hidden").innerText = maskPhone(data.phone);
+            }
+            if (data.address !== null) {
+                document.getElementById("address").value = data.address;
+            }
+            if (data.hometown !== null) {
+                document.getElementById("hometown").value = data.hometown;
+            }
+            if (data.role !== null) {
+                document.getElementById("role").innerText = data.role;
+            }
+            if (data.createdAt !== null) {
+                document.getElementById("created_at").value = new Date(data.createdAt).toLocaleString();
+            }
+            if (data.userImage !== null) {
+                document.getElementById("user-image").src = data.userImage;
+            }
+        })
+        .catch(err => {
+            console.error("加载用户信息失败:", err);
         });
 }
 

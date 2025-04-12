@@ -2,7 +2,7 @@ let isPhoneRegister = true;
 
 function sendVerification(){
     let code = Math.floor(100000 + Math.random() * 900000); // 生成6位验证码
-    document.getElementById("verification").innerText = code.toString();
+    document.getElementById("verification").value = code.toString();
 }
 
 function toggleRegister() {

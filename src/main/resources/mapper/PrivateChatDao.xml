@@ -17,10 +17,10 @@
     message
   </sql>
   <select id = "showPrivateChatMessage" parameterType="java.lang.Integer" resultType="com.example.system.jdbc.entity.Message">
-      SELECT u.`username` AS senderName, p.`message` AS content, p.`timestamp`
+      SELECT u.`username` AS senderName, p.`message` AS content
       FROM private_chats p
                LEFT JOIN users u
-                         ON p.`receiver_id` = u.`id`
+                         ON p.sender_id = u.`id`
       WHERE p.`receiver_id` = #{userId} AND p.`sender_id` = #{myUserId}
          OR p.`receiver_id` = #{myUserId} AND p.`sender_id` = #{userId}
       ORDER BY p.`timestamp`;
