@@ -5,8 +5,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * products
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的product表对应
  */
 public class Product implements Serializable {
     /**

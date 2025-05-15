@@ -4,6 +4,7 @@ package com.example.system.jdbc.entity;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 用来封装消息
  */
 public class Message {
     private String senderName;

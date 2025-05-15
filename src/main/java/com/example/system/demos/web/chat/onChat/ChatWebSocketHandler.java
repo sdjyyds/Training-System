@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 聊天室 WebSocket 处理类
  */
 @Component // 声明为 Spring Bean，由 Spring 容器管理
 public class ChatWebSocketHandler implements WebSocketHandler {

@@ -1,0 +1,21 @@
+.course-container {
+    width: 90%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.course-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 15px 0;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.course-card h3 {
+    margin: 0 0 10px;
+}
+
+.course-card button {
+    margin-top: 10px;
+}

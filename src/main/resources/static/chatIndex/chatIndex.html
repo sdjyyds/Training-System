@@ -9,23 +9,32 @@
 <body>
 
 <div class="chat-container">
-    <!-- 在 chat-container 内添加两个检索框 -->
-    <div style="margin-bottom: 10px;">
+    <!-- 查找用户和群聊 -->
+    <div class="input-group">
         <input type="number" id="user-id-input" placeholder="请输入用户ID">
         <button onclick="searchChat('user')">查找用户</button>
     </div>
-    <div style="margin-bottom: 10px;">
+    <div class="input-group">
         <input type="number" id="room-id-input" placeholder="请输入群聊ID">
         <button onclick="searchChat('room')">查找群聊</button>
     </div>
-    <!-- 显示查找结果 -->
+
+    <!-- 查找结果 -->
     <div id="search-result"></div>
+
+    <!--  创建群聊按钮放在 Chat List 标题上方 -->
+    <button onclick="location.href='../chat-room/manage-chat-room.html'" style="margin-bottom: 10px;">管理群聊</button>
+
+    <!-- Chat 列表 -->
     <h2>Chat List</h2>
     <div id="chat-list">
         <!-- Chat items will be dynamically loaded here -->
     </div>
+
+    <!-- 返回首页 -->
     <button onclick="location.href='../index/homeIndex.html'" style="margin-top: 10px;">返回首页</button>
 </div>
+
 
 <script src="chat-index.js">
 </script>

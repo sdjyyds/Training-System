@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * private_chats
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的private_chat表对应
  */
 public class PrivateChat implements Serializable {
     /**

@@ -4,23 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel = "stylesheet" href = "login.css" />
+    <link rel="stylesheet" href="login.css" />
 </head>
 <body>
 <div class="login-container">
-    <h2>Login</h2>
+    <h2>登录</h2>
     <form id="form_1" method="post" action="/login">
-        <input type="text" placeholder="Enter phone number or email" id="account" onblur="validateAccount()" name="account">
-        <p id="account-error" class="error">Please enter a valid phone number or email.</p>
+        <input type="text" placeholder="请输入手机号或邮箱" id="account" onblur="validateAccount()" name="account">
+        <p id="account-error" class="error">请输入有效的手机号或邮箱。</p>
 
-        <input type="password" placeholder="Password" id="password" onblur="validatePassword()" name="password">
-        <p id="password-error" class="error">Password must be at least 6 characters and contain letters and numbers.</p>
-        <button>Login</button>
+        <input type="password" placeholder="请输入密码" id="password" onblur="validatePassword()" name="password">
+        <p id="password-error" class="error">密码必须至少包含6个字符，并包含字母和数字。</p>
+        <button>登录</button>
     </form>
-    <a href="../register/register.html" class="register-link">Register</a>
+    <a href="../register/register.html" class="register-link">注册</a>
 </div>
 
-<script src="login.js"> </script>
+<script src="login.js"></script>
 </body>
 </html>
-

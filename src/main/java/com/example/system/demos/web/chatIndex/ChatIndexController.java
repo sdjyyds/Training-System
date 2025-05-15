@@ -13,5 +13,10 @@ import java.util.List;
  *
  */
 public interface ChatIndexController {
+    /**
+     * 显示聊天列表
+     * @param request 前端请求
+     * @return 聊天列表
+     */
     List<ChatIndex> showChatList(HttpServletRequest request);
 }

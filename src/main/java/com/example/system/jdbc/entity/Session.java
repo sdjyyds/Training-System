@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * sessions
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的session表对应
  */
 public class Session implements Serializable {
     /**

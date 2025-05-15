@@ -14,11 +14,19 @@ import java.util.List;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 完成对与索引界面不同跳转的业务逻辑判断的实现类
  */
 @RestController
 public class ChatIndexControllerImpl implements ChatIndexController{
+    //依赖注入消息索引服务类
     @Autowired
     private ChatIndexServiceImpl chatService;
+
+    /**
+     * 显示聊天列表
+     * @param request 前端请求
+     * @return 返回聊天列表
+     */
     @RequestMapping("/showChatList")
     public List<ChatIndex> showChatList(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

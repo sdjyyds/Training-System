@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * chat_rooms
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 聊天室
  */
 public class ChatRoom implements Serializable {
     /**

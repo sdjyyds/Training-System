@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>注册</title>
     <link rel="stylesheet" href="register.css">
 </head>
 <body>
 
 <div class="register-container">
-    <h2>Register</h2>
+    <h2>注册</h2>
     <div id="phone-register">
-        <input type="text" placeholder="Phone Number" id="phone" onblur="validatePhone()">
+        <input type="text" placeholder="手机号" id="phone" onblur="validatePhone()">
         <span id="logicCheck" class="error-message"></span>
     </div>
     <div id="email-register" style="display: none;">
-        <input type="email" placeholder="Email" id="email" onblur="validateEmail()">
+        <input type="email" placeholder="邮箱" id="email" onblur="validateEmail()">
         <span id="logicCheckEmail" class="error-message"></span>
     </div>
 
-    <!-- 新增密码输入框 -->
-    <input type="password" placeholder="Password" id="password" onblur="validatePassword()">
+    <input type="password" placeholder="密码" id="password" onblur="validatePassword()">
     <span id="logicCheckPassword" class="error-message"></span>
 
-    <input type="text" placeholder="Verification Code" id="verification">
-    <button onclick="sendVerification()">Send Code</button>
-    <button onclick="register()">Register</button>
+    <input type="text" placeholder="验证码" id="verification">
+    <button onclick="sendVerification()">发送验证码</button>
+    <button onclick="register()">注册</button>
     <span id="repeatCheck" class="error-message"></span>
-    <span class="switch-link" onclick="toggleRegister()">Register with Email</span>
-    <a href="../login/login.html" class="switch-link">Back to Login</a>
+    <span class="switch-link" onclick="toggleRegister()">使用邮箱注册</span>
+    <a href="../login/login.html" class="switch-link">返回登录</a>
 </div>
+
 <script src="register.js"></script>
 </body>
 </html>

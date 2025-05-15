@@ -12,41 +12,40 @@ import org.springframework.stereotype.Service;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * UserInfoService的实现类
  */
 @Service
 public class UserInfoServiceImpl implements UserInfoService{
-
+    //依赖注入user操作类
     @Autowired
     private UserDao userDao;
+    //依赖注入userSensitive操作类
     @Autowired
     private UserSensitiveDao userSensitiveDao;
 
     /**
-     * 1.查询User表整个字段
-     *
-     * @param id
-     * @return
+     * 1.获取User信息
+     * @param id userId
+     * @return User
      */
     public User getUserInfo(Integer id) {
         return userDao.selectByPrimaryKey(id);
     }
 
     /**
-     * 2.更新User表
-     *
-     * @param user
-     * @return
+     * 2.更新User
+     * @param user 用户的实体
+     * @return boolean
      */
     public boolean updateUserInfo(User user) {
         return userDao.updateByPrimaryKeySelective(user) > 0;
     }
 
     /**
-     * 3.判断UserSensitive中userId和password是否对了
-     *
-     * @param userId
-     * @param password
-     * @return
+     * 3.判断userId和password
+     * @param userId userId
+     * @param password password
+     * @return boolean
      */
     public boolean judgeUserIdAndPassword(Integer userId, String password) {
         UserSensitive userSensitive = userSensitiveDao.selectByPrimaryKey(userId);
@@ -56,9 +55,9 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     /**
      * 4.更新UserSensitive
-     * @param userId
-     * @param password
-     * @return
+     * @param userId user的id
+     * @param password password
+     * @return boolean
      */
     public boolean updatePassword(Integer userId, String password) {
         UserSensitive userSensitive = userSensitiveDao.selectByPrimaryKey(userId);
@@ -69,10 +68,10 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     /**
      * 5.判断邮箱或手机号是否是对应用户的
-     * @param userId
-     * @param emailOrPhone
-     * @param type
-     * @return
+     * @param userId user的id
+     * @param emailOrPhone 邮箱或手机号
+     * @param type email or phone
+     * @return boolean
      */
     public boolean judgeEmailOrPhone(Integer userId, String emailOrPhone, String type) {
         if ("email".equals(type)) {
@@ -86,9 +85,9 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     /**
      * 返回用户对应的邮箱或者手机号
-     * @param id
-     * @param type
-     * @return
+     * @param id user的id
+     * @param type email or phone
+     * @return String
      */
     public String selectEmailOrPhone(Integer id, String type) {
         if ("email".equals(type)) {

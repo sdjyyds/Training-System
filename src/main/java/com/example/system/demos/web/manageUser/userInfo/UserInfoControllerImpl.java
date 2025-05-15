@@ -10,21 +10,34 @@ import java.util.Map;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 用户信息控制的实现
  */
 @RestController
 @RequestMapping("/userInfo")
 public class UserInfoControllerImpl implements UserInfoController {
+    //依赖注入对应的服务类
     @Autowired
     UserInfoServiceImpl userInfoService;
+    //依赖注入user
     @Autowired
     private User user;
 
+    /**
+     * 1.显示用户的基本信息
+     * @param userId 用户的id
+     * @return 返回用户的基本信息
+     */
     @Override
     @GetMapping("/getInfo")
     public User showUserInfo(Integer userId) {
         return userInfoService.getUserInfo(userId);
     }
 
+    /**
+     * 2.更新用户的基本信息
+     * @param user 用户的实体
+     * @return 返回更新结果
+     */
     @Override
     @PostMapping("/updateInfo")
     public String updateUserInfo(@RequestBody User user) {
@@ -32,6 +45,11 @@ public class UserInfoControllerImpl implements UserInfoController {
         return userInfoService.updateUserInfo(user) ? "{\"status\": \"success\"}" : "{\"status\": \"fail\"}";
     }
 
+    /**
+     * 3.查询邮箱或者手机号
+     * @param body 接收参数
+     * @return 返回邮箱或者手机号
+     */
     @Override
     @PostMapping("/getEmailOrPhone")
     public String showEmailOrPhone(@RequestBody Map<String, String> body) {
@@ -51,6 +69,11 @@ public class UserInfoControllerImpl implements UserInfoController {
         return "{\"status\": \"fail\", \"value\": \"" + value + "\"}";
     }
 
+    /**
+     * 4.判断邮箱或者手机号是否存在
+     * @param body 接收前端参数
+     * @return 返回判断结果
+     */
     @Override
     @PostMapping("/verifyEmailOrPhone")
     public String judgeEmailOrPhone(@RequestBody Map<String, String> body) {
@@ -64,6 +87,11 @@ public class UserInfoControllerImpl implements UserInfoController {
         return "{\"status\": \"fail\"}";
     }
 
+    /**
+     * 5.更新密码
+     * @param map 接受前端传来的参数
+     * @return 返回更新结果
+     */
     @Override
     @PostMapping("/resetPassword")
     public String updatePassword(@RequestBody Map<String, String> map) {

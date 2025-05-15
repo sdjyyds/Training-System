@@ -2,14 +2,13 @@ package com.example.system.demos.web.manageUser.userInfo;
 
 import com.example.system.jdbc.entity.User;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 用户的基本信息
  */
 public interface UserInfoController {
     /**

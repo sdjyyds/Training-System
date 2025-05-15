@@ -1,56 +1,65 @@
-
+// 获取 URL 参数中的 chatId 和 type，用于区分聊天类型和聊天对象/群聊
 const urlParams = new URLSearchParams(window.location.search);
-const chatId = urlParams.get("chatId");
-const type = urlParams.get("type");
+const chatId = urlParams.get("chatId");      // 聊天对象或聊天室 ID
+const type = urlParams.get("type");          // 聊天类型（roomChat 或 privateChat）
 
+// 获取聊天框和输入框 DOM 元素
 const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("messageInput");
-//webSocket是采用webSocket通讯的 -- 应用层协议
-let socket;
 
+let socket; // WebSocket 实例，用于消息通信
+
+/**
+ * 建立 WebSocket 连接，并绑定消息接收与关闭事件
+ */
 function connectWebSocket() {
-    const wsType = type === "roomChat" ? "group" : "private";
-    //1.新建webSocket，需要提供通讯的地址,并且指明所采用的协议
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const host = window.location.host; // 自动获取当前域名和端口
-    const path = `/ws/chat/${wsType}/${chatId}`;
-    socket = new WebSocket(`${protocol}://${host}${path}`);
-    //2.这是接收消息的方法
+    const wsType = type === "roomChat" ? "group" : "private"; // 根据聊天类型确定路径
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws"; // 选择 ws/wss 协议
+    const host = window.location.host;
+    const path = `/ws/chat/${wsType}/${chatId}`; // 构建 WebSocket 路径
+    socket = new WebSocket(`${protocol}://${host}${path}`); // 创建 WebSocket 连接
+
+    // 监听服务器发送的消息
     socket.onmessage = (event) => {
-        const msg = JSON.parse(event.data);
-        appendMessage(`${msg.senderName}: ${msg.content}`);
+        const msg = JSON.parse(event.data); // 解析 JSON 消息
+        appendMessage(`${msg.senderName}: ${msg.content}`); // 展示到聊天框
     };
-    //3.这时连接关闭的方法
+
+    // 监听连接关闭事件，可实现自动重连
     socket.onclose = () => {
         console.log("WebSocket 关闭，尝试重连...");
-        // setTimeout(connectWebSocket, 1000); // 自动重连
+        // setTimeout(connectWebSocket, 1000); // 如需要可启用自动重连
     };
 }
 
-//将消息加载到本地的聊天框内
+/**
+ * 将普通文本消息添加到聊天框
+ */
 function appendMessage(text) {
     const p = document.createElement("p");
     p.textContent = text;
     chatBox.appendChild(p);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight; // 滚动到底部
 }
 
-
-//4.这时采用socket发送消息的方法 -- 触发
+/**
+ * 通过 WebSocket 发送一条消息
+ */
 function sendMessage() {
-    const content = input.value.trim();
+    const content = input.value.trim(); // 获取输入框内容
     if (content && socket && socket.readyState === WebSocket.OPEN) {
         const message = {
             content: content,
             roomId: type === "roomChat" ? parseInt(chatId) : null,
             receiverId: type === "privateChat" ? parseInt(chatId) : null
         };
-        socket.send(JSON.stringify(message));
-        input.value = "";
+        socket.send(JSON.stringify(message)); // 发送 JSON 格式消息
+        input.value = ""; // 清空输入框
     }
 }
-/*
- * 发送文件
+
+/**
+ * 上传文件到服务器（通过 FormData + fetch）
  */
 function uploadFile() {
     const fileInput = document.getElementById("fileInput");
@@ -58,8 +67,8 @@ function uploadFile() {
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("senderId", getUserId()); // 获取当前登录用户ID
+    formData.append("file", file); // 上传文件本体
+    formData.append("senderId", getUserId()); // 当前用户 ID
     formData.append("type", type);
     if (type === "roomChat") {
         formData.append("roomId", chatId);
@@ -67,47 +76,48 @@ function uploadFile() {
         formData.append("receiverId", chatId);
     }
 
-    fetch("../file/upload", {
+    fetch("../file/upload/file", {
         method: "POST",
         body: formData
     })
         .then(res => res.json())
         .then(data => {
             if (data.status === "success") {
-                // 文件上传成功，动态显示文件
-                const fileUrl = data.fileUrl; // 假设后端返回的文件访问路径为 fileUrl
-                appendFileMessage(fileUrl, file.name); // 调用函数将文件插入到聊天框中
+                // 上传成功后，直接预览文件（动态插入 DOM）
+                const fileUrl = data.fileUrl;
+                appendFileMessage(fileUrl, file.name);
             } else {
                 console.error("文件上传失败:", data.error);
             }
         });
 }
+
+/**
+ * 根据文件类型，动态生成图片、视频、文档或链接元素，插入聊天框
+ */
 function appendFileMessage(fileUrl, fileName) {
-    // 根据文件类型动态生成文件展示元素
     let fileElement;
-    const fileExtension = fileName.split('.').pop().toLowerCase();
+    const fileExtension = fileName.split('.').pop().toLowerCase(); // 获取扩展名
 
     if (["jpg", "jpeg", "png", "gif"].includes(fileExtension)) {
-        // 图片
         fileElement = `<img src="${fileUrl}" alt="${fileName}" class="file-message">`;
     } else if (["mp4", "mkv", "webm"].includes(fileExtension)) {
-        // 视频
         fileElement = `<video controls src="${fileUrl}" class="file-message"></video>`;
     } else if (["pdf", "docx", "txt"].includes(fileExtension)) {
-        // 文档
         fileElement = `<a href="${fileUrl}" target="_blank" class="file-message">${fileName}</a>`;
     } else {
-        // 其他文件类型
         fileElement = `<a href="${fileUrl}" target="_blank" class="file-message">${fileName}</a>`;
     }
 
-    // 将文件消息添加到聊天框中
-    const chatBox = document.getElementById("chat-box");
     const p = document.createElement("p");
-    p.innerHTML = fileElement; // 这里插入生成的文件元素
+    p.innerHTML = fileElement;
     chatBox.appendChild(p);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+/**
+ * 从 cookie 中获取当前用户 ID（login=xxx）
+ */
 function getUserId() {
     const cookies = document.cookie.split(";");
     for (let cookie of cookies) {
@@ -119,8 +129,8 @@ function getUserId() {
     return null;
 }
 
-/*
- * 加载聊天记录
+/**
+ * 加载历史聊天记录，支持普通消息与文件消息（[file] 开头）
  */
 function loadChatHistory() {
     let apiUrl = type === "roomChat"
@@ -133,10 +143,9 @@ function loadChatHistory() {
             chatBox.innerHTML = "";
             messages.forEach(msg => {
                 if (msg.content.startsWith("[file]")) {
-                    // 提取文件名并展示文件
-                    const filename = msg.content.substring(6);
-                    const fileUrl = `/uploads/${filename}`;
-                    appendFileMessage(fileUrl, filename); // 使用appendFileMessage来处理文件消息
+                    const fileUrl = msg.content.substring(6); // 提取 URL
+                    const filename = fileUrl.split("/").pop(); // 提取文件名
+                    appendFileMessage(fileUrl, filename);
                 } else {
                     appendMessage(`${msg.senderName}: ${msg.content}`);
                 }
@@ -145,21 +154,19 @@ function loadChatHistory() {
         .catch(err => console.error("加载聊天记录失败:", err));
 }
 
-//找到名字为user的cookie
+/**
+ * 页面加载后：自动登录验证 -> 加载聊天记录 -> 建立 WebSocket 连接
+ */
 window.onload = function () {
     fetch("../autoLogin")
         .then(response => response.json())
         .then(data => {
             if (data.status !== "success") {
-                // 登录状态失效就跳回登录页
-                window.location.href = "../login/login.html";
+                window.location.href = "../login/login.html"; // 未登录跳转登录页
             } else {
-                // 可以做欢迎展示
                 console.log("欢迎回来，用户ID:", data.user);
-                // 可选展示用户名
-                // document.getElementById("welcome").innerText = "欢迎，" + data.user;
-                loadChatHistory();
-                connectWebSocket();
+                loadChatHistory();     // 加载消息记录
+                connectWebSocket();    // 启动 WebSocket 通讯
             }
         });
 };

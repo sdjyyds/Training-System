@@ -8,6 +8,7 @@ import java.util.Objects;
  * @author jds
  * @version 1.1
  * @since 1.0.0
+ * 聊天列表
  */
 @Component
 public class ChatIndex {

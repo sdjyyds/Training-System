@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
- * users
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的user表对应
  */
 @Component
 public class User implements Serializable {

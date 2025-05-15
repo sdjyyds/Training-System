@@ -6,8 +6,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * user_sensitive
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的user_sensitive表对应
  */
 @Component
 public class UserSensitive implements Serializable {

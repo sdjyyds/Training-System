@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
     <link rel="stylesheet" href="chat.css">
 </head>
 <body>
 <div class="chat-container">
-<div id="chat-box"></div>
-<input id="messageInput" placeholder="Type your message">
-<button onclick="sendMessage()">Send</button>
-<input type="file" id="fileInput">
-<button onclick="uploadFile()">发送文件</button>
-    <button onclick="location.href='../chatIndex/chatIndex.html'" style="margin-top: 10px;">返回索引</button>
-<script src="chat.js">
-</script>
+    <div id="chat-box"></div>
+    <input id="messageInput" placeholder="Type your message">
+    <button onclick="sendMessage()">Send</button>
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">发送文件</button>
+    <button onclick="location.href='../chatIndex/chatIndex.html'" class="back-to-index">返回索引</button>
 </div>
+
+<script src="chat.js"></script>
 </body>
 </html>

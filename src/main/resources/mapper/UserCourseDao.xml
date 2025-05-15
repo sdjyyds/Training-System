@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.UserCourseDao">
+    <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.UserCourse">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="course_id" jdbcType="INTEGER" property="courseId"/>
+        <result column="purchased_at" jdbcType="TIMESTAMP" property="purchasedAt"/>
+    </resultMap>
+    <resultMap id="BaseResultMap2" type="com.example.system.jdbc.entity.Course">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="chat_image" jdbcType="VARCHAR" property="chatImage"/>
+        <result column="short_description" jdbcType="VARCHAR" property="shortDescription"/>
+        <result column="long_description" jdbcType="VARCHAR" property="longDescription"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="video_url" jdbcType="VARCHAR" property="videoUrl"/>
+    </resultMap>
+    <select id="exists" resultType="boolean">
+        select count(1)
+        from user_courses
+        where user_id = #{userId,jdbcType=INTEGER} and course_id = #{courseId,jdbcType=INTEGER}
+    </select>
+    <select id="selectCoursesByUserId" resultMap="BaseResultMap2">
+        SELECT *
+        FROM courses
+        WHERE id IN (SELECT course_id FROM user_courses WHERE user_id = #{userId,jdbcType=INTEGER});
+    </select>
+    <insert id="insert">
+        insert into user_courses (user_id, course_id, purchased_at)
+        values (#{userId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, now())
+    </insert>
+
+</mapper>

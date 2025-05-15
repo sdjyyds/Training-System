@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * group_messages
- * @author 
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
+ * 与数据库中的group_messages表对应
  */
 public class GroupMessage implements Serializable {
     /**

@@ -10,8 +10,10 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 /**
  * WebSocket 配置类
- *
  * 此类用于注册 WebSocket 的处理器（WebSocketHandler）并进行连接路径、拦截器等配置。
+ * @author jds
+ * @version 1.1
+ * @since 1.0.0
  */
 @Configuration                      // 声明这是一个配置类（相当于 XML 配置）
 @EnableWebSocket                   // 开启 WebSocket 功能

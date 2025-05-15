@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.system.jdbc.dao.CourseDao">
+    <resultMap id="BaseResultMap" type="com.example.system.jdbc.entity.Course">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="chat_image" jdbcType="VARCHAR" property="chatImage"/>
+        <result column="short_description" jdbcType="VARCHAR" property="shortDescription"/>
+        <result column="long_description" jdbcType="VARCHAR" property="longDescription"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
+        <result column="video_url" jdbcType="VARCHAR" property="videoUrl"/>
+    </resultMap>
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from courses
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>聊天室管理</title>
+    <link rel="stylesheet" href="manage-chat-room.css"/>
+</head>
+<body>
+<div class="main-container">
+    <h1 class="title">聊天室管理</h1>
+
+    <div class="form-card">
+        <!-- 添加聊天室 -->
+        <div class="form-section">
+            <label>添加聊天室</label>
+            <input type="text" id="room-name" placeholder="聊天室名称"/>
+            <input type="file" id="room-image-upload" accept="image/*"/>
+            <button onclick="manageChatRoom()">创建</button>
+        </div>
+
+        <!-- 删除聊天室 -->
+        <div class="form-section">
+            <label>删除聊天室</label>
+            <input type="number" id="delete-room-id" placeholder="聊天室 ID"/>
+            <button onclick="deleteRoom()">删除</button>
+        </div>
+
+        <!-- 修改聊天室 -->
+        <div class="form-section">
+            <label>修改聊天室</label>
+            <input type="number" id="rename-room-id" placeholder="聊天室 ID"/>
+            <input type="text" id="rename-room-name" placeholder="新名称（可选）"/>
+            <input type="file" id="rename-room-image-upload" accept="image/*"/>
+            <button onclick="renameRoom()">修改</button>
+        </div>
+
+        <!-- 提示信息 -->
+        <div id="message"></div>
+    </div>
+
+    <button class="back-button" onclick="location.href='../chatIndex/chatIndex.html'">返回聊天索引</button>
+</div>
+
+<script src="manage-chat-room.js"></script>
+</body>
+</html>
