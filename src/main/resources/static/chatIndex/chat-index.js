@@ -1,6 +1,26 @@
+let userId = null
+
+window.onload = function () {
+    fetch("../autoLogin")
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // 可以做欢迎展示
+                console.log("欢迎回来，用户ID:", data.user);
+                userId = data.user;
+                loadChatList();
+                // 可选展示用户名
+                // document.getElementById("welcome").innerText = "欢迎，" + data.user;
+            } else {
+                document.cookie = "token=; Max-Age=0; path=/"; // 删除无效 token
+                // 登录状态失效就跳回登录页
+                window.location.href = "../login/login.html";
+            }
+        });
+}
 
 function loadChatList() {
-    fetch("../showChatList")
+    fetch(`../showChatList?userId=${userId}`)
         .then(response => response.json())
         .then(data => {
             // 渲染 chat 列表
@@ -20,16 +40,16 @@ function loadChatList() {
         });
 }
 function searchChat(type) {
-    const id = type === 'user'
+    const chatId = type === 'user'
         ? document.getElementById("user-id-input").value
         : document.getElementById("room-id-input").value;
 
-    if (!id || isNaN(id)) {
+    if (!chatId || isNaN(chatId)) {
         alert("请输入有效的 ID");
         return;
     }
 
-    fetch(`../chat/search?type=${type}&id=${id}`)
+    fetch(`../chat/search?type=${type}&chatId=${chatId}`)
         .then(res => res.json())
         .then(data => {
             const resultDiv = document.getElementById("search-result");
@@ -56,22 +76,5 @@ function searchChat(type) {
         .catch(() => {
             document.getElementById("search-result").innerHTML =
                 "<p style='color:red;'>请求失败，请稍后再试</p>";
-        });
-}
-
-window.onload = function () {
-    fetch("../autoLogin")
-        .then(response => response.json())
-        .then(data => {
-            if (data.status !== "success") {
-                // 登录状态失效就跳回登录页
-                window.location.href = "../login/login.html";
-            } else {
-                // 可以做欢迎展示
-                console.log("欢迎回来，用户ID:", data.user);
-                // 可选展示用户名
-                // document.getElementById("welcome").innerText = "欢迎，" + data.user;
-                loadChatList();
-            }
         });
 }

@@ -1,16 +1,12 @@
 package com.example.system.demos.web.manageUser.login;
 
+import com.example.system.demos.web.manageUser.util.JwtUtils;
 import com.example.system.jdbc.dao.UserDao;
 import com.example.system.jdbc.entity.User;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import static com.example.system.demos.web.manageUser.util.MD5Utils.generateWay;
-
 /**
  * @author jds
  * @version 1.1
@@ -18,68 +14,60 @@ import static com.example.system.demos.web.manageUser.util.MD5Utils.generateWay;
  */
 @Service
 public class LoginServixeImpl implements LoginService {
+
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     /**
-     * 验证用户身份
-     * @param account  手机号或邮箱
-     * @param password 密码
-     * @return User
+     * 根据账号和密码验证用户身份
+     * 如果账号包含 "@"，则通过邮箱和密码验证用户；否则，通过手机号和密码验证用户
+     *
+     * @param account 用户账号，可以是邮箱或手机号
+     * @param password 用户密码
+     * @return 如果验证成功，返回用户对象；否则，返回null
      */
     public User verifyIdentity(String account, String password) {
-        User user;
-        if (account.contains("@")) user = userDao.findByEmailAndPassword(account, password);
-        else user = userDao.findByPhoneAndPassword(account, password);
-        return user;
+        if (account.contains("@")) return userDao.findByEmailAndPassword(account, password);
+        else return userDao.findByPhoneAndPassword(account, password);
     }
 
     /**
-     * 处理用户登录
-     * @param user 用户
-     * @param request 前端请求
-     * @param response 后端响应
+     * 登录前的预处理，包括生成JWT token并设置到Cookie中
+     *
+     * @param user 验证身份成功后的用户对象
+     * @param response HTTP响应对象，用于设置Cookie
      */
-    public void beforeLogin(User user, HttpServletRequest request, HttpServletResponse response){
-        //2.创建或者获取httpSession维护一些必要信息--设置过期时间
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user.getId());
-        session.setAttribute("username", user.getUsername());
-        //session.setAttribute("",);
-        session.setMaxInactiveInterval(30 * 60);
-        System.out.println("session:" + session);
-        //3.生成token
-        String token = generateWay(String.valueOf(user.getId()));
-        //4.存储安全token
-        Cookie loginCookie = new Cookie("login", String.valueOf(user.getId()));
-        loginCookie.setMaxAge(7 * 60 * 60 * 24);
-        loginCookie.setPath("/");
-        Cookie tokenCookie = new Cookie("token", token);
-        tokenCookie.setMaxAge(7 * 60 * 60 * 24);
-        tokenCookie.setHttpOnly(true);
-        loginCookie.setPath("/");
-        response.addCookie(loginCookie);
-        response.addCookie(tokenCookie);
-
-        System.out.println("完成创建！");
+    public void beforeLogin(User user, HttpServletResponse response) {
+        String token = jwtUtils.generateToken(String.valueOf(user.getId()));
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(7 * 24 * 60 * 60); // 7天
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 
     /**
-     * 创建httpSession
-     * @param login 登录名
-     * @param token 安全token
-     * @param request 前端请求
-     * @param session 会话信息
-     * @return 返回是否创建成功
+     * 验证JWT token的有效性
+     *
+     * @param token 待验证的JWT token
+     * @return 如果token有效，返回true；否则，返回false
      */
-    public boolean createHttpSession(String login, String token, HttpServletRequest request, HttpSession session) {
-        if (login != null && token != null && token.equals(generateWay(login))) {
-            session = request.getSession();
-            session.setAttribute("user", login);
-            session.setAttribute("username", userDao.selectUserNameById(Integer.valueOf(login)));
-            session.setMaxInactiveInterval(30 * 60); // 30 分钟
-            return true;
-        }
-        return false;
+    public boolean validateToken(String token) {
+        return jwtUtils.validateToken(token);
+    }
+
+    /**
+     * 从JWT token中提取用户登录名
+     *
+     * @param token 包含用户信息的JWT token
+     * @return 用户登录名
+     */
+    public String extractLoginFromToken(String token) {
+        return jwtUtils.parseToken(token);
     }
 }
+
+

@@ -31,13 +31,26 @@ function validatePassword() {
     }
 }
 
-// 页面加载时检查 sessionId，如果有效则自动跳转
+// 页面加载时检查 token
 window.onload = function () {
     fetch("../autoLogin")
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
-                window.location.href = data.redirect;
+                window.location.href = "../index/homeIndex.html";
+            } else {
+                document.cookie = "token=; Max-Age=0; path=/"; // 删除无效 token
             }
         });
 };
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+}
+
+// 请求携带 token 示例（如 fetch）
+// fetch('/some/protected/api', {
+//     headers: {
+//         'Authorization': 'Bearer ' + localStorage.getItem('token')
+//     }
+// });

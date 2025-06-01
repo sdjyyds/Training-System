@@ -19,12 +19,12 @@ public class UserCourseServiceImpl implements UserCourseService {
     @Autowired
     private UserCourseDao userCourseDao;
 
+
     public boolean buyCourse(int userId, int courseId) {
         if (userCourseDao.exists(userId, courseId)) return false;
         userCourseDao.insert(userId, courseId);
         return true;
     }
-
     public List<Course> getCoursesByUserId(int userId) {
         return userCourseDao.selectCoursesByUserId(userId);
     }

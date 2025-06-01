@@ -1,6 +1,15 @@
-function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    return match ? decodeURIComponent(match[2]) : null;
+window.onload = function () {
+    fetch("../../autoLogin")
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                loadMyCourses(data.user);
+            } else {
+                document.cookie = "token=; Max-Age=0; path=/"; // 删除无效 token
+                window.location.href = "../login/login.html";
+
+            }
+        });
 }
 function previewVideo(url, button) {
     const video = document.createElement("video");
@@ -18,12 +27,9 @@ function previewVideo(url, button) {
         parent.appendChild(video);
     }
 }
-const userId = getCookie("login");
-if (!userId) {
-    alert("未登录，请先登录！");
-    location.href = "../login/login.html";
-} else {
-    fetch(`/api/user-courses/my?login=${userId}`)
+
+function loadMyCourses(userId) {
+    fetch(`/api/user-courses/my?userId=${userId}`)
         .then(res => res.json())
         .then(courses => {
             const container = document.getElementById('my-course-list');
@@ -46,4 +52,5 @@ if (!userId) {
             console.error('加载课程失败:', err);
             alert('无法加载课程，请稍后重试');
         });
+
 }

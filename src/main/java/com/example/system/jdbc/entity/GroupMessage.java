@@ -1,5 +1,9 @@
 package com.example.system.jdbc.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,6 +13,9 @@ import java.util.Date;
  * @since 1.0.0
  * 与数据库中的group_messages表对应
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GroupMessage implements Serializable {
     /**
      * 群聊消息唯一 ID

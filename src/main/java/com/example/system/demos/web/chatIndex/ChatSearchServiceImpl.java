@@ -5,6 +5,7 @@ import com.example.system.jdbc.dao.UserDao;
 import com.example.system.jdbc.entity.ChatIndex;
 import com.example.system.jdbc.entity.ChatRoom;
 import com.example.system.jdbc.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
  * 完成对与索引界面不同跳转的业务逻辑判断的实现
  */
 @Service
+@Slf4j
 public class ChatSearchServiceImpl implements ChatSearchService{
     //需要操作的房间
     @Autowired
@@ -33,13 +35,17 @@ public class ChatSearchServiceImpl implements ChatSearchService{
      */
     @Override
     public ChatIndex getPrivateChatIndexByUserId(int useId) {
+        log.info("开始获取用户{}的私聊索引", useId);
         User user = userDao.selectByPrimaryKey(useId);
-        if(user == null) return null;
+        if(user == null) {
+            log.error("获取用户{}的私聊索引失败，用户不存在", useId);
+            return null;
+        }
         chatIndex.setChatImage(user.getUserImage());
         chatIndex.setId(user.getId());
         chatIndex.setChatName(user.getUsername());
         chatIndex.setType("privateChat");
-        System.out.println(chatIndex);
+        log.info("获取用户{}的私聊索引成功，索引：{}", useId, chatIndex);
         return chatIndex;
     }
 
@@ -50,13 +56,17 @@ public class ChatSearchServiceImpl implements ChatSearchService{
      */
     @Override
     public ChatIndex getGroupChatIndexByRoomId(int roomId) {
+        log.info("开始获取群聊{}的索引", roomId);
         ChatRoom chatRoom = chatRoomDao.selectByPrimaryKey(roomId);
-        if(chatRoom == null) return null;
+        if(chatRoom == null) {
+            log.error("获取群聊{}的索引失败，群聊不存在", roomId);
+            return null;
+        }
         chatIndex.setChatImage(chatRoom.getChatImage());
         chatIndex.setId(chatRoom.getId());
         chatIndex.setChatName(chatRoom.getName());
         chatIndex.setType("roomChat");
-        System.out.println(chatIndex);
+        log.info("获取群聊{}的索引成功，索引：{}", roomId, chatIndex);
         return chatIndex;
     }
 }

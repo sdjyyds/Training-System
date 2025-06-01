@@ -1,6 +1,7 @@
 package com.example.system.jdbc.dao;
 
 import com.example.system.jdbc.entity.Course;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.*;
 
@@ -11,4 +12,5 @@ import java.util.*;
  */
 public interface CourseDao {
     List<Course> findAll();
+
 }

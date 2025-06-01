@@ -15,10 +15,10 @@ import java.util.*;
 public class CourseServiceImpl implements CourseService {
     @Autowired
     private CourseDao courseDao;
-
     public List<Course> getAllCourses() {
         return courseDao.findAll();
     }
+
 }
 
 

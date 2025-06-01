@@ -6,6 +6,7 @@ import com.example.system.jdbc.dao.UserDao;
 import com.example.system.jdbc.dao.UserSensitiveDao;
 import com.example.system.jdbc.entity.User;
 import com.example.system.jdbc.entity.UserSensitive;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
  */
 // 服务类注解，表示这是一个服务类
 @Service
+@Slf4j
 public class RegisterServiceImpl implements RegisterService {
     // 自动注入UserDao实例，使用懒加载
     @Autowired
@@ -24,12 +26,6 @@ public class RegisterServiceImpl implements RegisterService {
     // 自动注入UserSensitiveDao实例，使用懒加载
     @Autowired
     private UserSensitiveDao userSensitiveDao;
-    // 自动注入User实例
-    @Autowired
-    private User user;
-    // 自动注入UserSensitive实例
-    @Autowired
-    private UserSensitive userSensitive;
 
     /**
      * 注册用户
@@ -49,6 +45,7 @@ public class RegisterServiceImpl implements RegisterService {
             return false;
         }
         // 设置用户手机号或者邮箱
+        User user = new User();
         if(account.contains("@"))user.setEmail(account);
         else user.setPhone(account);
         // 插入用户信息到数据库
@@ -56,6 +53,7 @@ public class RegisterServiceImpl implements RegisterService {
         // 获取用户ID
         Integer userId = userDao.selectPrimaryKeyByPhone(account);
         // 设置用户敏感信息的用户ID
+        UserSensitive userSensitive = new UserSensitive();
         userSensitive.setUserId(userId);
         // 对密码进行MD5加密
         String passwordHash = MD5Utils.generateWay(password);
@@ -64,8 +62,8 @@ public class RegisterServiceImpl implements RegisterService {
         // 插入用户敏感信息到数据库
         userSensitiveDao.insertSelective(userSensitive);
         // 输出注册成功信息
-        System.out.println("手机号为：" + account + "的用户注册成功");
-        System.out.println("该用户的ID为：" + userId);
+        log.info("手机号为：" + account + "的用户注册成功");
+        log.info("该用户的ID为：" + userId);
         // 返回注册成功
         return true;
     }

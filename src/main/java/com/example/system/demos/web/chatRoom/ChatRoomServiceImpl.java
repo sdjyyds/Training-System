@@ -1,8 +1,7 @@
-package com.example.system.demos.web.chatIndex;
+package com.example.system.demos.web.chatRoom;
 
 import com.example.system.jdbc.dao.ChatRoomDao;
 import com.example.system.jdbc.dao.GroupMessageDao;
-import com.example.system.jdbc.dao.PrivateChatDao;
 import com.example.system.jdbc.entity.ChatRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,38 +13,13 @@ import org.springframework.stereotype.Service;
  * 添加聊天服务的实现类
  */
 @Service
-public class AddChatServiceImpl implements AddChatService {
-    //注入私聊操作类
-    @Autowired
-    private PrivateChatDao privateChatDao;
+public class ChatRoomServiceImpl implements ChatRoomService {
     //注入群聊操作类
     @Autowired
     private GroupMessageDao groupMessageDao;
     //注入聊天室操作类
     @Autowired
     private ChatRoomDao chatRoomDao;
-
-    /**
-     * 添加私聊
-     * @param senderId 发送者的id
-     * @param receiverId 接受者的id
-     * @param content 聊天内容
-     */
-    @Override
-    public void addPrivateChat(int senderId, int receiverId, String content) {
-        privateChatDao.insertPrivateMessage(senderId, receiverId, content);
-    }
-
-    /**
-     * 添加群聊
-     * @param senderId 发送者的id
-     * @param roomId 群聊号
-     * @param content 聊天内容
-     */
-    @Override
-    public void addGroupChat(int senderId, int roomId, String content) {
-        groupMessageDao.insertGroupMessage(senderId, roomId, content);
-    }
 
     @Override
     public boolean deleteChatRoom(int roomId) {

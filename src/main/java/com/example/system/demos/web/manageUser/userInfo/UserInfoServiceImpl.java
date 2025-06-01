@@ -5,6 +5,7 @@ import com.example.system.jdbc.dao.UserDao;
 import com.example.system.jdbc.dao.UserSensitiveDao;
 import com.example.system.jdbc.entity.User;
 import com.example.system.jdbc.entity.UserSensitive;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @since 1.0.0
  * UserInfoService的实现类
  */
+@Slf4j
 @Service
 public class UserInfoServiceImpl implements UserInfoService{
     //依赖注入user操作类
@@ -95,7 +97,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         } else if ("phone".equals(type)) {
             return userDao.selectByPrimaryKey(id).getPhone();
         }
-        System.out.println("type error");
+        log.error("type error");
         return null;
     }
 }

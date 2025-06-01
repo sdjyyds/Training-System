@@ -1,17 +1,17 @@
 let userId = null;
-
 window.onload = function () {
     fetch("../autoLogin")
         .then(res => res.json())
         .then(data => {
-            if (data.status !== "success") {
-                window.location.href = "login.html";
-            } else {
+            if (data.status === "success") {
                 loadUserInfo(data.user);
+            } else {
+                document.cookie = "token=; Max-Age=0; path=/"; // 删除无效 token
+                window.location.href = "../login/login.html";
+
             }
         });
 };
-
 function loadUserInfo(id) {
     userId = id;
     fetch(`../userInfo/getInfo?userId=${userId}`)

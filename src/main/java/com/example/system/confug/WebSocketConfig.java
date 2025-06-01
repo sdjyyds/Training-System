@@ -1,5 +1,6 @@
-package com.example.system.demos.web.chat.onChat;
+package com.example.system.confug;
 
+import com.example.system.demos.web.chat.onChat.ChatWebSocketHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -32,7 +33,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
      */
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatWebSocketHandler, "/ws/chat/{type}/{id}") // 设置连接路径：支持路径变量 type（"private"或"group"）、id（对方用户ID或群聊ID）
+        registry.addHandler(chatWebSocketHandler, "/ws/chat/{type}/{chatId}/{userId}") // 设置连接路径：支持路径变量 type（"private"或"group"）、id（对方用户ID或群聊ID）
 
                 // 添加握手拦截器：在 WebSocket 建立连接前执行，可用于读取 HTTP Session 等信息
                 // HttpSessionHandshakeInterceptor 会自动将 HttpSession 中的所有属性复制到 WebSocketSession 的 attributes 中

@@ -1,4 +1,4 @@
-package com.example.system.demos.web.chat.fileLoad;
+package com.example.system.confug;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
